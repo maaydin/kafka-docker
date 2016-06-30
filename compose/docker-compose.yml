@@ -1,0 +1,47 @@
+version: '2'
+networks:
+  app_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "true"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.21.0.0/24
+        gateway: 172.21.0.1
+      - subnet: ffff:ac14:0::/64
+        gateway: ffff:ac14:0::1
+
+services:
+  zookeeper1:
+    image: "maaydin/centos-7-zookeeper"
+    networks:
+      app_net:
+        ipv4_address: 172.21.0.22
+    environment:
+      - id=1
+    env_file: zoo.env
+
+  zookeeper2:
+    image: "maaydin/centos-7-zookeeper"
+    networks:
+      app_net:
+        ipv4_address: 172.21.0.23
+    environment:
+      - id=2
+    env_file: zoo.env
+
+  zookeeper3:
+    image: "maaydin/centos-7-zookeeper"
+    networks:
+      app_net:
+        ipv4_address: 172.21.0.24
+    environment:
+      - id=3
+    env_file: zoo.env
+
+  kafka:
+    image: "maaydin/centos-7-kafka"
+    networks:
+      - app_net
+    env_file: kafka.env
